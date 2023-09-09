@@ -63,7 +63,12 @@ void register_setting(
 	property_info["hint"] = p_hint;
 	property_info["hint_string"] = p_hint_string;
 
+	#ifdef GDEXTENSION
 	project_settings->add_property_info(property_info);
+	#else
+	project_settings->call("add_property_info", property_info);
+	#endif
+
 	project_settings->set_initial_value(p_name, p_value);
 	project_settings->set_restart_if_changed(p_name, p_needs_restart);
 

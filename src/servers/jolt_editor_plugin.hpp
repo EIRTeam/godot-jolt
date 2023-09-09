@@ -11,9 +11,22 @@ private:
 	static void _bind_methods();
 
 public:
-	void _enter_tree() override;
+	void _enter_tree() GDEX_OVERRIDE_EX_ONLY;
 
-	void _exit_tree() override;
+	void _exit_tree() GDEX_OVERRIDE_EX_ONLY;
+protected:
+#ifndef GDEXTENSION
+	void _notification(int p_what) {
+		switch(p_what) {
+			case NOTIFICATION_ENTER_TREE: {
+				_enter_tree();
+			} break;
+			case NOTIFICATION_EXIT_TREE: {
+				_exit_tree();
+			} break;
+		}
+	}
+#endif
 
 private:
 	enum MenuOption {

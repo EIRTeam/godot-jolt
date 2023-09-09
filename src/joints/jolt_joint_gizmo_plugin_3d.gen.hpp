@@ -1,8 +1,12 @@
+/* THIS FILE IS GENERATED DO NOT EDIT */
+#ifndef JOLT_JOINT_GIZMO_PLUGIN_3D_GEN_HPP
+#define JOLT_JOINT_GIZMO_PLUGIN_3D_GEN_HPP
+#define GDMODULE_IMPL
+
 #pragma once
 
 #ifdef GDJ_CONFIG_EDITOR
 
-#include "jolt_joint_gizmo_plugin_3d.gen.hpp"
 
 #if defined(GDEXTENSION) || defined(GDMODULE_IMPL)
 
@@ -10,18 +14,18 @@ class JoltJointGizmoPlugin3D final : public EditorNode3DGizmoPlugin {
 	GDCLASS_NO_WARN(JoltJointGizmoPlugin3D, EditorNode3DGizmoPlugin)
 
 private:
-	static void _bind_methods();
+	static void bind_methods();
 
 public:
 	JoltJointGizmoPlugin3D() = default;
 
 	explicit JoltJointGizmoPlugin3D(EditorInterface* p_editor_interface);
 
-	bool _has_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY override;
+	bool has_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY override;
 
-	Ref<EditorNode3DGizmo> _create_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY override;
+	Ref<EditorNode3DGizmo> create_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY override;
 
-	String _get_gizmo_name() const override;
+	String get_gizmo_name() const override;
 
 	void _redraw(const Ref<EditorNode3DGizmo>& p_gizmo) GDEX_OVERRIDE_EX_ONLY;
 
@@ -48,3 +52,5 @@ private:
 
 #endif // GDJ_CONFIG_EDITOR
 #endif
+#undef GDMODULE_IMPL
+#endif // JOLT_JOINT_GIZMO_PLUGIN_3D_GEN_HPP

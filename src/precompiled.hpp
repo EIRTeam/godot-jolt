@@ -14,6 +14,8 @@
 #pragma warning(disable : 4245 4365)
 #endif // _MSC_VER
 
+#ifdef GDEXTENSION
+
 #include <gdextension_interface.h>
 
 #include <godot_cpp/classes/engine.hpp>
@@ -44,9 +46,33 @@
 #include <godot_cpp/variant/builtin_types.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/variant.hpp>
+#else
 
-#ifdef GDJ_CONFIG_EDITOR
+#include "core/config/engine.h"
+#include "scene/3d/visual_instance_3d.h"
+#include "core/object/object.h"
+#include "core/os/os.h"
+#include "scene/3d/physics_body_3d.h"
+#include "servers/physics_server_3d.h"
+#include "core/config/project_settings.h"
+#include "core/object/worker_thread_pool.h"
+#include "core/object/class_db.h"
+#include "core/typedefs.h"
+#include "core/error/error_macros.h"
+#include "core/math/math_defs.h"
+#include "core/math/math_funcs.h"
+#include "core/os/memory.h"
+#include "core/templates/hashfuncs.h"
+#include "core/variant/variant.h"
+#include "core/variant/variant_utility.h"
+#include "scene/3d/node_3d.h"
 
+
+#endif
+
+#if defined(GDJ_CONFIG_EDITOR)
+
+#ifdef GDEXTENSION
 #include <godot_cpp/classes/control.hpp>
 #include <godot_cpp/classes/editor_file_dialog.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
@@ -62,15 +88,44 @@
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/timer.hpp>
 #include <godot_cpp/templates/spin_lock.hpp>
+#else
+
+#include "scene/gui/control.h"
+#include "editor/editor_interface.h"
+#include "editor/plugins/node_3d_editor_gizmos.h"
+#include "editor/plugins/node_3d_editor_plugin.h"
+#include "editor/editor_plugin.h"
+#include "editor/editor_settings.h"
+#include "core/debugger/engine_debugger.h"
+#include "scene/resources/material.h"
+#include "scene/resources/theme.h"
+#include "core/os/time.h"
+#include "scene/main/timer.h"
+#include "core/os/spin_lock.h"
+#include "servers/extensions/physics_server_3d_extension.h"
+
+#endif // GDEXTENSION || TOOLS_ENABLED
 
 #endif // GDJ_CONFIG_EDITOR
 
 #ifdef JPH_DEBUG_RENDERER
 
+#ifdef GDEXTENSION
+
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/world3d.hpp>
+
+#else
+
+#include "scene/3d/camera_3d.h"
+#include "servers/rendering_server.h"
+#include "scene/resources/material.h"
+#include "scene/main/viewport.h"
+#include "scene/resources/world_3d.h"
+
+#endif
 
 #endif // JPH_DEBUG_RENDERER
 
@@ -153,10 +208,6 @@ using namespace godot;
 #pragma warning(pop)
 #endif // _MSC_VER
 
-#include "containers/free_list.hpp"
-#include "containers/hash_map.hpp"
-#include "containers/hash_set.hpp"
-#include "containers/inline_vector.hpp"
 #include "containers/local_vector.hpp"
 #include "containers/rid_owner.hpp"
 #include "containers/symmetric_bit_table.hpp"
@@ -164,7 +215,18 @@ using namespace godot;
 #include "misc/error_macros.hpp"
 #include "misc/gdclass_macros.hpp"
 #include "misc/jolt_stream_wrappers.hpp"
+#include "misc/gdex_rename.hpp"
+#include "containers/hash_map.hpp"
+#include "containers/hash_set.hpp"
 #include "misc/math.hpp"
+
+#ifdef GDEXTENSION
+#else
+#include "core/templates/rid.h"
+#include "core/string/print_string.h"
+#include "containers/rid_owner.hpp"
+#endif
+
 #include "misc/scope_guard.hpp"
 #include "misc/type_conversions.hpp"
 #include "misc/utility_functions.hpp"

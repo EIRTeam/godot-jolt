@@ -3,18 +3,18 @@
 #include "misc/error_macros.hpp"
 
 template<typename TElement, typename TAllocator = std::allocator<TElement>>
-class LocalVector {
+class LocalVectorJolt {
 	using Implementation = std::vector<TElement, TAllocator>;
 
 public:
 	using Iterator = typename Implementation::iterator;
 	using ConstIterator = typename Implementation::const_iterator;
 
-	LocalVector() = default;
+	LocalVectorJolt() = default;
 
-	explicit LocalVector(int32_t p_capacity) { impl.reserve(p_capacity); }
+	explicit LocalVectorJolt(int32_t p_capacity) { impl.reserve(p_capacity); }
 
-	LocalVector(std::initializer_list<TElement> p_list)
+	LocalVectorJolt(std::initializer_list<TElement> p_list)
 		: impl(p_list) { }
 
 	_FORCE_INLINE_ void push_back(const TElement& p_value) { emplace_back(p_value); }
@@ -172,7 +172,7 @@ public:
 		return impl[(size_t)p_index];
 	}
 
-	_FORCE_INLINE_ LocalVector& operator=(std::initializer_list<TElement> p_list) {
+	_FORCE_INLINE_ LocalVectorJolt& operator=(std::initializer_list<TElement> p_list) {
 		impl = p_list;
 		return *this;
 	}

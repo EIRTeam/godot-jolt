@@ -40,7 +40,7 @@ class JoltContactListener3D final
 		JPH::Vec3 impulse = {};
 	};
 
-	using Contacts = LocalVector<Contact>;
+	using Contacts = LocalVectorJolt<Contact>;
 
 	struct Manifold {
 		Contacts contacts1;
@@ -50,11 +50,11 @@ class JoltContactListener3D final
 		float depth = 0.0f;
 	};
 
-	using BodyIDs = HashSet<JPH::BodyID, BodyIDHasher>;
+	using BodyIDs = HashSetJolt<JPH::BodyID, BodyIDHasher>;
 
-	using Overlaps = HashSet<JPH::SubShapeIDPair, ShapePairHasher>;
+	using Overlaps = HashSetJolt<JPH::SubShapeIDPair, ShapePairHasher>;
 
-	using ManifoldsByShapePair = HashMap<JPH::SubShapeIDPair, Manifold, ShapePairHasher>;
+	using ManifoldsByShapePair = HashMapJolt<JPH::SubShapeIDPair, Manifold, ShapePairHasher>;
 
 public:
 	explicit JoltContactListener3D(JoltSpace3D* p_space)

@@ -43,8 +43,11 @@ public:
 
 	void body_exiting_tree();
 
+#ifdef GDEXTENSION
 	PackedStringArray _get_configuration_warnings() const override;
-
+#else
+	PackedStringArray get_configuration_warnings() const override;
+#endif
 protected:
 	static PhysicsServer3D* _get_physics_server();
 

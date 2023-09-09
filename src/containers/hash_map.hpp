@@ -5,7 +5,7 @@ template<
 	typename TValue,
 	typename THasher = HashMapHasherDefault,
 	typename TComparator = HashMapComparatorDefault<TKey>>
-class HashMap {
+class HashMapJolt {
 	struct Hasher {
 		_FORCE_INLINE_ size_t operator()(const TKey& p_key) const {
 			return (size_t)THasher::hash(p_key);
@@ -24,9 +24,9 @@ public:
 	using Iterator = typename Implementation::iterator;
 	using ConstIterator = typename Implementation::const_iterator;
 
-	HashMap() = default;
+	HashMapJolt() = default;
 
-	explicit HashMap(int32_t p_capacity) { impl.reserve((size_t)p_capacity); }
+	explicit HashMapJolt(int32_t p_capacity) { impl.reserve((size_t)p_capacity); }
 
 	_FORCE_INLINE_ int32_t get_capacity() const {
 		return int32_t(impl.max_load_factor() * impl.bucket_count());

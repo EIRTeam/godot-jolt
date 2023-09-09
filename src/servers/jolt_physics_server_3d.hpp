@@ -1,5 +1,10 @@
 #pragma once
 
+#include "servers/extensions/physics_server_3d_extension.h"
+#include "jolt_physics_server_3d.gen.hpp"
+
+#if defined(GDEXTENSION) || defined(GDMODULE_IMPL)
+
 class JoltAreaImpl3D;
 class JoltBodyImpl3D;
 class JoltJobSystem;
@@ -7,10 +12,8 @@ class JoltJointImpl3D;
 class JoltShapeImpl3D;
 class JoltSoftBodyImpl3D;
 class JoltSpace3D;
-
 class JoltPhysicsServer3D final : public PhysicsServer3DExtension {
 	GDCLASS_NO_WARN(JoltPhysicsServer3D, PhysicsServer3DExtension)
-
 public:
 	enum HingeJointParamJolt {
 		HINGE_JOINT_LIMIT_SPRING_FREQUENCY = 100,
@@ -365,7 +368,7 @@ public:
 		bool p_collide_separation_ray,
 		bool p_recovery_as_collision,
 		PhysicsServer3DExtensionMotionResult* p_result
-	) const override;
+	) const GDEX_OVERRIDE_EX_ONLY;
 
 	PhysicsDirectBodyState3D* _body_get_direct_state(const RID& p_body) override;
 
@@ -395,7 +398,7 @@ public:
 	void _soft_body_remove_collision_exception(const RID& p_body, const RID& p_excepted_body)
 		override;
 
-	TypedArray<RID> _soft_body_get_collision_exceptions(const RID& p_body) const override;
+	TypedArray<RID> _soft_body_get_collision_exceptions(const RID& p_body) const GDEX_OVERRIDE_EX_ONLY;
 
 	void _soft_body_set_state(
 		const RID& p_body,
@@ -596,9 +599,9 @@ public:
 
 	bool _joint_is_disabled_collisions_between_bodies(const RID& p_joint) const override;
 
-	void _free_rid(const RID& p_rid) override;
+	void _free_rid(const RID& p_rid) GDEX_OVERRIDE_EX_ONLY;
 
-	void _set_active(bool p_active) override;
+	void GDEX_FUNC_RENAME_U(set_active)(bool p_active) override;
 
 	void _init() override;
 
@@ -741,6 +744,44 @@ public:
 
 	float generic_6dof_joint_get_applied_torque(const RID& p_joint);
 
+	// Engine wrappers
+#ifndef GDEXTENSION
+	thread_local static const HashSet<RID> *exclude_bodies;
+	thread_local static const HashSet<ObjectID> *exclude_objects;
+
+	virtual void free(RID p_rid) override {
+		free_rid(p_rid);
+	}
+	void soft_body_get_collision_exceptions(RID p_soft_body, List<RID> *p_exceptions) override {
+		TypedArray<RID> ret = _soft_body_get_collision_exceptions(p_soft_body);
+		for (int i = 0; i < ret.size(); i++) {
+			p_exceptions->push_back(ret[i]);
+		}
+	}
+	bool body_test_motion(RID p_body, const MotionParameters &p_parameters, MotionResult *r_result = nullptr) override {
+		exclude_bodies = &p_parameters.exclude_bodies;
+		exclude_objects = &p_parameters.exclude_objects;
+		bool ret = _body_test_motion(p_body, p_parameters.from, p_parameters.motion, p_parameters.margin, p_parameters.max_collisions, p_parameters.collide_separation_ray, p_parameters.recovery_as_collision, r_result);
+		exclude_bodies = nullptr;
+		exclude_objects = nullptr;
+		return ret;
+	}
+	void body_get_collision_exceptions(RID p_body, List<RID> *p_exceptions) override {
+		TypedArray<RID> ret = _body_get_collision_exceptions(p_body);
+		for (int i = 0; i < ret.size(); i++) {
+			p_exceptions->push_back(ret[i]);
+		}
+	}
+
+	bool body_test_motion_is_excluding_body(RID p_body) const {
+		return exclude_bodies && exclude_bodies->has(p_body);
+	}
+
+	bool body_test_motion_is_excluding_object(ObjectID p_object) const {
+		return exclude_objects && exclude_objects->has(p_object);
+	}
+#endif
+
 private:
 	mutable RID_PtrOwner<JoltSpace3D> space_owner;
 
@@ -754,7 +795,7 @@ private:
 
 	mutable RID_PtrOwner<JoltJointImpl3D> joint_owner;
 
-	HashSet<JoltSpace3D*> active_spaces;
+	HashSetJolt<JoltSpace3D*> active_spaces;
 
 	JoltJobSystem* job_system = nullptr;
 
@@ -763,11 +804,13 @@ private:
 	bool flushing_queries = false;
 };
 
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisFlagJolt)
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointParamJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointFlagJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointParamJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointFlagJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointParamJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointFlagJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisParamJolt);
+VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisFlagJolt);
+
+#endif

@@ -22,9 +22,15 @@ public:
 	}
 
 	_FORCE_INLINE_ RID make_rid(TResource* p_ptr) {
+		#ifdef GDEXTENNSION
 		const int64_t id = UtilityFunctions::rid_allocate_id();
 		ptrs_by_id[id] = p_ptr;
 		return UtilityFunctions::rid_from_int64(id);
+		#else
+		const int64_t id = VariantUtilityFunctions::rid_allocate_id();
+		ptrs_by_id[id] = p_ptr;
+		return VariantUtilityFunctions::rid_from_int64(id);
+		#endif
 	}
 
 	_FORCE_INLINE_ TResource* get_or_null(const RID& p_rid) const {
@@ -47,5 +53,5 @@ public:
 	RID_PtrOwner& operator=(RID_PtrOwner&& p_other) noexcept = default;
 
 private:
-	HashMap<int64_t, TResource*> ptrs_by_id;
+	HashMapJolt<int64_t, TResource*> ptrs_by_id;
 };

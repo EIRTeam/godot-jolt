@@ -412,8 +412,8 @@ bool JoltContactListener3D::_try_add_debug_contacts(
 		const JPH::RVec3 point_on_1 = p_manifold.GetWorldSpaceContactPointOn1((JPH::uint)i);
 		const JPH::RVec3 point_on_2 = p_manifold.GetWorldSpaceContactPointOn2((JPH::uint)i);
 
-		debug_contacts[pair_index + 0] = to_godot(point_on_1);
-		debug_contacts[pair_index + 1] = to_godot(point_on_2);
+		debug_contacts.ptrw()[pair_index + 0] = to_godot(point_on_1);
+		debug_contacts.ptrw()[pair_index + 1] = to_godot(point_on_2);
 	}
 
 	return true;

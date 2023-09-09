@@ -1,7 +1,7 @@
 #pragma once
 
 // clang-format off
-
+#ifdef GDEXTENSION
 #define ERR_FAIL_INDEX_D(m_index, m_size) ERR_FAIL_INDEX_V(m_index, m_size, {})
 #define ERR_FAIL_INDEX_D_MSG(m_index, m_size, m_msg) ERR_FAIL_INDEX_V_MSG(m_index, m_size, {}, m_msg)
 #define ERR_FAIL_UNSIGNED_INDEX_D(m_index, m_size) ERR_FAIL_UNSIGNED_INDEX_V(m_index, m_size, {})
@@ -12,6 +12,18 @@
 #define ERR_FAIL_COND_D_MSG(m_cond, m_msg) ERR_FAIL_COND_V_MSG(m_cond, {}, m_msg)
 #define ERR_FAIL_D() ERR_FAIL_V({})
 #define ERR_FAIL_D_MSG(m_msg) ERR_FAIL_V_MSG({}, m_msg)
+#else
+#define ERR_FAIL_INDEX_D(m_index, m_size)
+#define ERR_FAIL_INDEX_D_MSG(m_index, m_size, m_msg)
+#define ERR_FAIL_UNSIGNED_INDEX_D(m_index, m_size)
+#define ERR_FAIL_UNSIGNED_INDEX_D_MSG(m_index, m_size, m_msg)
+#define ERR_FAIL_NULL_D(m_param)
+#define ERR_FAIL_NULL_D_MSG(m_param, m_msg)
+#define ERR_FAIL_COND_D(m_cond)
+#define ERR_FAIL_COND_D_MSG(m_cond, m_msg)
+#define ERR_FAIL_D()
+#define ERR_FAIL_D_MSG(m_msg)
+#endif
 
 #define GDJ_MSG_NOT_IMPL vformat("%s is not implemented in Godot Jolt.", __FUNCTION__)
 #define ERR_FAIL_NOT_IMPL() ERR_FAIL_MSG(GDJ_MSG_NOT_IMPL)

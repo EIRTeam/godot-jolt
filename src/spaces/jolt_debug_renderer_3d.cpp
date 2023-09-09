@@ -124,9 +124,11 @@ int32_t JoltDebugRenderer3D::submit(const RID& p_mesh) {
 		triangles_surface_data["vertex_count"] = vertex_count;
 		triangles_surface_data["aabb"] = triangles_aabb;
 		triangles_surface_data["attribute_data"] = triangle_attributes;
-
+#ifdef GDEXTENSION
 		rendering_server->mesh_add_surface(p_mesh, triangles_surface_data);
-
+#else
+		rendering_server->call("mesh_add_surface", p_mesh, triangles_surface_data);
+#endif
 		triangle_capacity = triangle_count;
 		triangle_count = 0;
 		triangles_aabb = AABB();
@@ -148,8 +150,11 @@ int32_t JoltDebugRenderer3D::submit(const RID& p_mesh) {
 		lines_surface_data["aabb"] = lines_aabb;
 		lines_surface_data["attribute_data"] = line_attributes;
 
+		#ifdef GDEXTENSION
 		rendering_server->mesh_add_surface(p_mesh, lines_surface_data);
-
+		#else
+		rendering_server->call("mesh_add_surface", p_mesh, lines_surface_data);
+		#endif
 		line_capacity = line_count;
 		line_count = 0;
 		lines_aabb = AABB();

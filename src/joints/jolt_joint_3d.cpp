@@ -57,7 +57,11 @@ JoltJoint3D::~JoltJoint3D() {
 	PhysicsServer3D* physics_server = _get_physics_server();
 	ERR_FAIL_NULL(physics_server);
 
+#ifdef GDEXTENSION
 	physics_server->free_rid(rid);
+#else
+	physics_server->free(rid);
+#endif
 }
 
 void JoltJoint3D::set_node_a(const NodePath& p_path) {
@@ -130,6 +134,7 @@ void JoltJoint3D::body_exiting_tree() {
 	_destroy();
 }
 
+#ifdef GDEXTENSION
 PackedStringArray JoltJoint3D::_get_configuration_warnings() const {
 	PackedStringArray warnings = Node3D::_get_configuration_warnings();
 
@@ -139,6 +144,19 @@ PackedStringArray JoltJoint3D::_get_configuration_warnings() const {
 
 	return warnings;
 }
+#else
+
+PackedStringArray JoltJoint3D::get_configuration_warnings() const {
+	PackedStringArray warnings = Node3D::get_configuration_warnings();
+
+	if (!warning.is_empty()) {
+		warnings.push_back(warning);
+	}
+
+	return warnings;
+}
+
+#endif
 
 PhysicsServer3D* JoltJoint3D::_get_physics_server() {
 	return PhysicsServer3D::get_singleton();

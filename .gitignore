@@ -2,6 +2,8 @@
 /**/compile_commands.json
 /build
 /examples/addons
+*.o
+__pycache__/
 
 # Godot
 /**/.godot

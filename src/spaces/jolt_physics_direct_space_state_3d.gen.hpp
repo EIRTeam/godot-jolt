@@ -1,6 +1,10 @@
+/* THIS FILE IS GENERATED DO NOT EDIT */
+#ifndef JOLT_PHYSICS_DIRECT_SPACE_STATE_3D_GEN_HPP
+#define JOLT_PHYSICS_DIRECT_SPACE_STATE_3D_GEN_HPP
+#define GDMODULE_IMPL
+
 #pragma once
 
-#include "jolt_physics_direct_space_state_3d.gen.hpp"
 
 #if defined(GDEXTENSION) || defined(GDMODULE_IMPL)
 
@@ -8,11 +12,11 @@ class JoltBodyImpl3D;
 class JoltShapeImpl3D;
 class JoltSpace3D;
 
-class JoltPhysicsDirectSpaceState3D final : public PhysicsDirectSpaceState3DExtension {
-	GDCLASS_NO_WARN(JoltPhysicsDirectSpaceState3D, PhysicsDirectSpaceState3DExtension)
+class JoltPhysicsDirectSpaceState3D final : public PhysicsDirectSpaceState3D {
+	GDCLASS_NO_WARN(JoltPhysicsDirectSpaceState3D, PhysicsDirectSpaceState3D)
 
 private:
-	static void _bind_methods() { }
+	static void bind_methods() { }
 
 public:
 	JoltPhysicsDirectSpaceState3D() = default;
@@ -41,10 +45,10 @@ public:
 	) GDEX_OVERRIDE_EX_ONLY;
 
 	int32_t _intersect_shape(
-		const RID& p_shape_rid,
+		RID p_shape_rid,
 		const Transform3D& p_transform,
 		const Vector3& p_motion,
-		double p_margin,
+		real_t p_margin,
 		uint32_t p_collision_mask,
 		bool p_collide_with_bodies,
 		bool p_collide_with_areas,
@@ -53,23 +57,23 @@ public:
 	) GDEX_OVERRIDE_EX_ONLY;
 
 	bool _cast_motion(
-		const RID& p_shape_rid,
+		RID p_shape_rid,
 		const Transform3D& p_transform,
 		const Vector3& p_motion,
-		double p_margin,
+		real_t p_margin,
 		uint32_t p_collision_mask,
 		bool p_collide_with_bodies,
 		bool p_collide_with_areas,
-		real_t* p_closest_safe,
-		real_t* p_closest_unsafe,
+		float* p_closest_safe,
+		float* p_closest_unsafe,
 		PhysicsServer3DExtensionShapeRestInfo* p_info
 	) GDEX_OVERRIDE_EX_ONLY;
 
 	bool _collide_shape(
-		const RID& p_shape_rid,
+		RID p_shape_rid,
 		const Transform3D& p_transform,
 		const Vector3& p_motion,
-		double p_margin,
+		real_t p_margin,
 		uint32_t p_collision_mask,
 		bool p_collide_with_bodies,
 		bool p_collide_with_areas,
@@ -79,17 +83,17 @@ public:
 	) GDEX_OVERRIDE_EX_ONLY;
 
 	bool _rest_info(
-		const RID& p_shape_rid,
+		RID p_shape_rid,
 		const Transform3D& p_transform,
 		const Vector3& p_motion,
-		double p_margin,
+		real_t p_margin,
 		uint32_t p_collision_mask,
 		bool p_collide_with_bodies,
 		bool p_collide_with_areas,
 		PhysicsServer3DExtensionShapeRestInfo* p_info
 	) GDEX_OVERRIDE_EX_ONLY;
 
-	Vector3 _get_closest_point_to_object_volume(const RID& p_object, const Vector3& p_point)
+	Vector3 _get_closest_point_to_object_volume(RID p_object, const Vector3& p_point)
 		const GDEX_OVERRIDE_EX_ONLY;
 
 	bool test_body_motion(
@@ -167,28 +171,28 @@ private:
 		const JPH::ObjectLayerFilter& p_object_layer_filter,
 		const JPH::BodyFilter& p_body_filter,
 		const JPH::ShapeFilter& p_shape_filter,
-		real_t& p_closest_safe,
-		real_t& p_closest_unsafe
+		float& p_closest_safe,
+		float& p_closest_unsafe
 	) const;
 
-	bool _body_motion_recover(
+	bool body_motion_recover(
 		const JoltBodyImpl3D& p_body,
 		const Transform3D& p_transform,
 		float p_margin,
 		Vector3& p_recovery
 	) const;
 
-	bool _body_motion_cast(
+	bool body_motion_cast(
 		const JoltBodyImpl3D& p_body,
 		const Transform3D& p_transform,
 		const Vector3& p_scale,
 		const Vector3& p_motion,
 		bool p_collide_separation_ray,
-		real_t& p_safe_fraction,
-		real_t& p_unsafe_fraction
+		float& p_safe_fraction,
+		float& p_unsafe_fraction
 	) const;
 
-	bool _body_motion_collide(
+	bool body_motion_collide(
 		const JoltBodyImpl3D& p_body,
 		const Transform3D& p_transform,
 		float p_distance,
@@ -200,3 +204,5 @@ private:
 	JoltSpace3D* space = nullptr;
 };
 #endif
+#undef GDMODULE_IMPL
+#endif // JOLT_PHYSICS_DIRECT_SPACE_STATE_3D_GEN_HPP

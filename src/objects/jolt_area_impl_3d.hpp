@@ -39,7 +39,7 @@ class JoltAreaImpl3D final : public JoltShapedObjectImpl3D {
 	};
 
 	struct Overlap {
-		HashMap<ShapeIDPair, ShapeIndexPair, ShapeIDPair> shape_pairs;
+		HashMapJolt<ShapeIDPair, ShapeIndexPair, ShapeIDPair> shape_pairs;
 
 		InlineVector<ShapeIndexPair, 1> pending_added;
 
@@ -50,7 +50,7 @@ class JoltAreaImpl3D final : public JoltShapedObjectImpl3D {
 		ObjectID instance_id;
 	};
 
-	using OverlapsById = HashMap<JPH::BodyID, Overlap, BodyIDHasher>;
+	using OverlapsById = HashMapJolt<JPH::BodyID, Overlap, BodyIDHasher>;
 
 public:
 	using OverrideMode = PhysicsServer3D::AreaSpaceOverrideMode;

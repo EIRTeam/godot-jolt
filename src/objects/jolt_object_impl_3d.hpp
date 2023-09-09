@@ -74,8 +74,11 @@ public:
 
 	JPH::BodyID get_jolt_id() const { return jolt_id; }
 
+#ifdef GDEXTENSION
 	GodotObject* get_instance() const;
-
+#else
+	Object* get_instance() const;
+#endif
 	Object* get_instance_unsafe() const;
 
 	Object* get_instance_wrapped() const;

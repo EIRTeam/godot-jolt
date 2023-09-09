@@ -1,5 +1,9 @@
 #pragma once
 
+#include "jolt_physics_direct_body_state_3d.gen.hpp"
+
+#if defined(GDEXTENSION) || defined(GDMODULE_IMPL)
+
 class JoltBodyImpl3D;
 
 class JoltPhysicsDirectBodyState3D final : public PhysicsDirectBodyState3DExtension {
@@ -108,3 +112,5 @@ public:
 private:
 	JoltBodyImpl3D* body = nullptr;
 };
+
+#endif

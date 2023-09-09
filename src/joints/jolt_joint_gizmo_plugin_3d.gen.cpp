@@ -1,3 +1,4 @@
+/* THIS FILE IS GENERATED DO NOT EDIT */
 #include "jolt_joint_gizmo_plugin_3d.hpp"
 
 #ifdef GDJ_CONFIG_EDITOR
@@ -57,9 +58,13 @@ void draw_linear_limits(
 	};
 
 	if (p_limit_enabled && p_limit_upper >= p_limit_lower) {
-		draw_line(p_limit_lower, p_limit_upper);
-		draw_square(p_limit_lower);
-		draw_square(p_limit_upper);
+		// HACK(mihe): Since Godot's linear constraints seem to be inverted, and we emulate that
+		// even for the custom joints, we're forced to flip these to line up with the actual range
+		// of motion.
+
+		draw_line(-p_limit_upper, -p_limit_lower);
+		draw_square(-p_limit_upper);
+		draw_square(-p_limit_lower);
 	} else {
 		draw_line(GIZMO_RADIUS, -GIZMO_RADIUS);
 	}
@@ -252,21 +257,21 @@ void draw_g6dof_joint(const JoltGeneric6DOFJoint3D& p_joint, PackedVector3Array&
 
 } // namespace
 
-void JoltJointGizmoPlugin3D::_bind_methods() {
+void JoltJointGizmoPlugin3D::bind_methods() {
 	BIND_METHOD(JoltJointGizmoPlugin3D, redraw_gizmos);
 }
 
 JoltJointGizmoPlugin3D::JoltJointGizmoPlugin3D(EditorInterface* p_editor_interface)
 	: editor_interface(p_editor_interface) { }
 
-bool JoltJointGizmoPlugin3D::_has_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY {
+bool JoltJointGizmoPlugin3D::has_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY {
 	return Object::cast_to<JoltJoint3D>(p_node) != nullptr;
 }
 
-Ref<EditorNode3DGizmo> JoltJointGizmoPlugin3D::_create_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY {
+Ref<EditorNode3DGizmo> JoltJointGizmoPlugin3D::create_gizmo(Node3D* p_node) GDEX_CONST_EX_ONLY {
 	EditorNode3DGizmo* gizmo = nullptr;
 
-	if (_has_gizmo(p_node)) {
+	if (has_gizmo(p_node)) {
 		gizmo = memnew(EditorNode3DGizmo);
 		gizmos.insert(gizmo);
 	}
@@ -274,7 +279,7 @@ Ref<EditorNode3DGizmo> JoltJointGizmoPlugin3D::_create_gizmo(Node3D* p_node) GDE
 	return gizmo;
 }
 
-String JoltJointGizmoPlugin3D::_get_gizmo_name() const {
+String JoltJointGizmoPlugin3D::get_gizmo_name() const {
 	return U"JoltJoint3D";
 }
 
@@ -368,3 +373,4 @@ void JoltJointGizmoPlugin3D::_create_redraw_timer(const Ref<EditorNode3DGizmo>& 
 }
 
 #endif // GDJ_CONFIG_EDITOR
+

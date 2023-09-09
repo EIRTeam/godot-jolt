@@ -39,7 +39,7 @@ private:
 
 	InlineVector<uint64_t, 32> collisions_by_layer;
 
-	HashMap<uint64_t, JPH::ObjectLayer> layers_by_collision;
+	HashMapJolt<uint64_t, JPH::ObjectLayer> layers_by_collision;
 
 	JPH::ObjectLayer next_object_layer = 0;
 };

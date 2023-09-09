@@ -112,6 +112,7 @@ JoltDebugGeometry3D::JoltDebugGeometry3D()
 	set_base(mesh);
 
 	set_cast_shadows_setting(GeometryInstance3D::SHADOW_CASTING_SETTING_OFF);
+	set_process(true);
 
 	default_material.instantiate();
 	default_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
@@ -121,7 +122,11 @@ JoltDebugGeometry3D::JoltDebugGeometry3D()
 
 JoltDebugGeometry3D::~JoltDebugGeometry3D() {
 	if (mesh.is_valid()) {
+		#ifdef GDEXTENSION
 		RenderingServer::get_singleton()->free_rid(mesh);
+		#else
+		RenderingServer::get_singleton()->free(mesh);
+		#endif
 	}
 
 	JoltDebugRenderer3D::release(debug_renderer);

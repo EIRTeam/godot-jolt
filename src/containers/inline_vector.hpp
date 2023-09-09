@@ -1,11 +1,12 @@
 #pragma once
 
 #include "containers/inline_allocator.hpp"
+
 #include "containers/local_vector.hpp"
 
 template<typename TElement, int32_t TCapacity>
-class InlineVector final : public LocalVector<TElement, InlineAllocator<TElement, TCapacity>> {
-	using Base = LocalVector<TElement, InlineAllocator<TElement, TCapacity>>;
+class InlineVector final : public LocalVectorJolt<TElement, InlineAllocator<TElement, TCapacity>> {
+	using Base = LocalVectorJolt<TElement, InlineAllocator<TElement, TCapacity>>;
 
 public:
 	InlineVector() { Base::reserve(TCapacity); }

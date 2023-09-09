@@ -97,7 +97,7 @@ JPH::ShapeRefC JoltHeightMapShapeImpl3D::_build_height_field() const {
 	// we mirror the shape along the Z-axis to get the desired triangulation and reverse the rows to
 	// undo the mirroring.
 
-	LocalVector<float> heights_rev;
+	LocalVectorJolt<float> heights_rev;
 	heights_rev.resize((int32_t)heights.size());
 
 	const real_t* heights_ptr = heights.ptr();

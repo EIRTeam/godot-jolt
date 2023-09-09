@@ -10,9 +10,15 @@ JoltObjectImpl3D::JoltObjectImpl3D(ObjectType p_object_type)
 
 JoltObjectImpl3D::~JoltObjectImpl3D() = default;
 
+#ifdef GDEXTENSION
 GodotObject* JoltObjectImpl3D::get_instance() const {
 	return internal::gdextension_interface_object_get_instance_from_id(instance_id);
 }
+#else
+Object* JoltObjectImpl3D::get_instance() const {
+	return ObjectDB::get_instance(instance_id);
+}
+#endif
 
 Object* JoltObjectImpl3D::get_instance_unsafe() const {
 	// HACK(mihe): This is being deliberately and incorrectly cast to a godot-cpp `Object` when in

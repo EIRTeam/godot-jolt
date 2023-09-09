@@ -1,0 +1,267 @@
+#!/usr/bin/env python
+
+import jolt_build_files
+import modulify
+
+Import("env")
+Import("env_modules")
+
+env_godot_jolt = env_modules.Clone()
+
+thirdparty_dir = "thirdparty/jolt/Jolt/"
+env_godot_jolt.Prepend(CPPPATH=["thirdparty/jolt/"])
+
+jolt_config = ARGUMENTS.get("jolt_config", "EditorDebug")
+is_editor_config = jolt_config in ["EditorDebug", "EditorDevelopment", "EditorDistribution"]
+is_debug_config = jolt_config in ["Debug", "EditorDebug"]
+is_development_config = jolt_config in ["Development", "EditorDevelopment"]
+is_distribution_config = jolt_config in ["Distribution", "EditorDistribution"]
+is_optimized_config = is_development_config or is_distribution_config
+
+x86_instruction_set = ARGUMENTS.get("jolt_instruction_set", "SSE2")
+
+if is_development_config or is_debug_config:
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_DEBUG_RENDERER"])
+
+if env["platform"] == "windows":
+    env_godot_jolt.Prepend(CPPDEFINES=[
+        "GDJ_PLATFORM_WINDOWS"
+        "WIN32_LEAN_AND_MEAN",
+        "VC_EXTRALEAN",
+        "NOMINMAX",
+        "STRICT",
+    ])
+elif env["platform"] == "linuxbsd":
+    env_godot_jolt.Prepend(CXXFLAGS=["-std=gnu++17"])
+
+use_avx512 = False
+use_avx2 = False
+use_avx = False
+use_sse2 = False
+use_bmi1 = False
+use_fma3 = False
+use_f16c = False
+use_sse4_2 = False
+
+env_godot_jolt.Prepend(CPPDEFINES=[
+    "MI_OVERRIDE=FALSE",
+    "MI_USE_CXX=FALSE",
+    "MI_OSX_INTERPOSE=FALSE",
+    "MI_OSX_ZONE=FALSE",
+    "MI_WIN_REDIRECT=FALSE",
+    "MI_BUILD_SHARED=FALSE",
+    "MI_BUILD_OBJECT=FALSE",
+    "MI_BUILD_TESTS=FALSE",
+    "MI_SKIP_COLLECT_ON_EXIT=TRUE"
+])
+
+env_godot_jolt.Prepend(CPPPATH="thirdparty/mimalloc/include")
+
+if x86_instruction_set in ["AVX512"]:
+    use_avx512 = True
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_AVX512"])
+if x86_instruction_set in ["AVX512", "AVX2"]:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_AVX2"])
+    use_avx2 = True
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_BMI1"])
+    use_bmi1 = True
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_FMA3"])
+    use_fma3 = True
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_F16C"])
+    use_f16c = True
+if x86_instruction_set in ["AVX512", "AVX2", "AVX"]:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_AVX"])
+    use_avx = True
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_SSE4_2"])
+    use_sse4_2 = True
+if x86_instruction_set in ["AVX512", "AVX2", "AVX", "SSE2"]:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_USE_SSE2"])
+    use_sse2 = True
+
+if is_debug_config:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_CONFIG_DEBUG", "_DEBUG", "NDEBUG"])
+if is_development_config:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_CONFIG_DEVELOPMENT"])
+if is_distribution_config:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_CONFIG_DISTRIBUTION"])
+if is_editor_config:
+    env_godot_jolt.Prepend(CPPDEFINES=["GDJ_CONFIG_EDITOR"])
+
+if env.msvc:
+    if is_optimized_config:
+        env_godot_jolt.Prepend(CXXFLAGS=["/GS"])
+    if use_avx512:
+        env_godot_jolt.Prepend(CXXFLAGS=["/arch:AVX512"])
+    elif use_avx2:
+        env_godot_jolt.Prepend(CXXFLAGS=["/arch:AVX2"])
+    elif use_avx:
+        env_godot_jolt.Prepend(CXXFLAGS=["/arch:AVX"])
+else:
+    if use_sse2:
+        env_godot_jolt.Prepend(CXXFLAGS=["-msse2"])
+    if use_sse4_2:
+        env_godot_jolt.Prepend(CXXFLAGS=["-msse4.2", "-mpopcnt"])
+    if use_avx:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mavx"])
+    if use_f16c:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mf16c"])
+    if use_fma3:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mfma"])
+    if use_bmi1:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mbmi", "-mlzcnt"])
+    if use_avx2:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mavx2"])
+    if use_avx512:
+        env_godot_jolt.Prepend(CXXFLAGS=["-mavx512f", "-mavx512vl", "-mavx512dq"])
+    if not env["use_llvm"]:
+        env_godot_jolt.Prepend(CXXFLAGS=["-no-integrated-cpp"])
+
+
+# Setup jolt build
+env_thirdparty = env_godot_jolt.Clone()
+env_thirdparty.disable_warnings()
+
+if use_avx512:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX512"])
+if use_avx2:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX2"])
+if use_bmi1:
+    env_thirdparty.Prepend(CPPDEFINES=[
+        "JPH_USE_TZCNT",
+        "JPH_USE_LZCNT"
+    ])
+if use_fma3:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_FMADD"])
+if use_f16c:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_F16C"])
+if use_avx:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX"])
+if use_sse4_2:
+    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_SSE4_2", "JPH_USE_SSE4_1"])
+
+thirdparty_obj = []
+thirdparty_sources = [thirdparty_dir + file for file in jolt_build_files.get_files()]
+
+env_thirdparty.add_source_files(thirdparty_obj, thirdparty_sources)
+env.modules_sources += thirdparty_obj
+
+# Setup mimalloc
+
+env_mimalloc = env_godot_jolt.Clone()
+env_mimalloc.disable_warnings()
+
+mimalloc_sources = [
+    "thirdparty/mimalloc/src/alloc.c",
+    "thirdparty/mimalloc/src/alloc-aligned.c",
+    "thirdparty/mimalloc/src/alloc-posix.c",
+    "thirdparty/mimalloc/src/arena.c",
+    "thirdparty/mimalloc/src/bitmap.c",
+    "thirdparty/mimalloc/src/heap.c",
+    "thirdparty/mimalloc/src/init.c",
+    "thirdparty/mimalloc/src/options.c",
+    "thirdparty/mimalloc/src/os.c",
+    "thirdparty/mimalloc/src/page.c",
+    "thirdparty/mimalloc/src/random.c",
+    "thirdparty/mimalloc/src/segment.c",
+    "thirdparty/mimalloc/src/segment-map.c",
+    "thirdparty/mimalloc/src/stats.c",
+    "thirdparty/mimalloc/src/prim/prim.c"
+]
+
+print(mimalloc_sources)
+
+mimalloc_obj = []
+
+env_thirdparty.add_source_files(mimalloc_obj, mimalloc_sources)
+env.modules_sources += mimalloc_obj
+
+# Finish setting up godot-jolt
+source_dir = "src/"
+
+env_godot_jolt.Prepend(CPPPATH=[source_dir])
+
+sources = [
+    "src/register_types.cpp"
+]
+sources += Glob("src/containers/*.cpp")
+sources += Glob("src/joints/*.cpp")
+sources += Glob("src/misc/*.cpp")
+sources += Glob("src/objects/*.cpp")
+sources += Glob("src/servers/*.cpp")
+sources += Glob("src/shapes/*.cpp")
+sources += Glob("src/spaces/*.cpp")
+
+pch_file = "precompiled.hpp"
+
+if env.msvc:
+    env_godot_jolt.Prepend(CXXFLAGS=["/FI" + pch_file])
+else:
+    env_godot_jolt.Prepend(CXXFLAGS=["-include" + pch_file])
+
+env_godot_jolt.Prepend(CPPPATH=[source_dir])
+
+module_obj = []
+
+modulify.modulify(
+    env_godot_jolt,
+    "src/servers/jolt_physics_server_3d.hpp",
+    [
+        "_body_get_collision_exceptions",
+    ],
+    {
+        "_area_get_object_instance_id": {
+            "override_return_type": "ObjectID"
+        },
+        "_body_get_object_instance_id": {
+            "override_return_type": "ObjectID"
+        }
+    },
+    sources
+)
+
+modulify.modulify(
+    env_godot_jolt,
+    "src/joints/jolt_joint_gizmo_plugin_3d.hpp",
+    [
+        "_redraw",
+        "_create_materials",
+        "_create_redraw_timer"
+    ],
+    {
+    },
+    sources
+)
+
+modulify.modulify(
+    env_godot_jolt,
+    "src/objects/jolt_physics_direct_body_state_3d.hpp",
+    [
+    ],
+    {
+        "_get_contact_collider_id": {
+            "override_return_type": "ObjectID"
+        }
+    },
+    sources
+)
+
+modulify.modulify(
+    env_godot_jolt,
+    "src/spaces/jolt_physics_direct_space_state_3d.hpp",
+    [
+        "_intersect_ray",
+        "_intersect_point",
+        "_intersect_shape",
+        "_cast_motion",
+        "_collide_shape",
+        "_rest_info",
+        "_get_closest_point_to_object_volume"
+    ],
+    {
+    },
+    sources
+)
+
+env_godot_jolt.add_source_files(module_obj, sources)
+
+env.modules_sources += module_obj
