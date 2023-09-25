@@ -66,6 +66,7 @@
 #include "core/variant/variant.h"
 #include "core/variant/variant_utility.h"
 #include "scene/3d/node_3d.h"
+#include "editor/gui/editor_file_dialog.h"
 
 
 #endif

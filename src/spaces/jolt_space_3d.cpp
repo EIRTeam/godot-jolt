@@ -423,13 +423,23 @@ void JoltSpace3D::dump_debug_snapshot(const String& p_dir) {
 			"Writing snapshot of physics space with RID '%d' to '%s' failed with error '%s'.",
 			rid.get_id(),
 			path,
+#ifdef GDEXTENSION
 			UtilityFunctions::error_string(file_access->get_error())
+#else
+			VariantUtilityFunctions::error_string(file_access->get_error())
+#endif
 		)
 	);
 
+#ifdef GDEXTENSION
 	UtilityFunctions::print(
 		vformat("Snapshot of physics space with RID '%d' saved to '%s'.", rid.get_id(), path)
 	);
+#else
+	if (is_print_verbose_enabled()) {
+		print_line(vformat("Snapshot of physics space with RID '%d' saved to '%s'.", rid.get_id(), path));
+	}
+#endif
 }
 
 const PackedVector3Array& JoltSpace3D::get_debug_contacts() const {

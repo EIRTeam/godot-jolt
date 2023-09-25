@@ -134,14 +134,26 @@ JoltPhysicsServer3D::JoltPhysicsServer3D() {
 	Engine* engine = Engine::get_singleton();
 
 	if (engine->has_singleton(server_name)) {
+#ifdef GDEXTENSION
 		engine->unregister_singleton(server_name);
+#else
+		engine->remove_singleton(server_name);
+#endif
 	}
 
+#ifdef GDEXTENSION
 	engine->register_singleton(server_name, this);
+#else
+	engine->remove_singleton(server_name, this);
+#endif
 }
 
 JoltPhysicsServer3D::~JoltPhysicsServer3D() {
+#ifdef GDEXTENSION
 	Engine::get_singleton()->unregister_singleton(NAMEOF(JoltPhysicsServer3D));
+#else
+	Engine::get_singleton()->remove_singleton(NAMEOF(JoltPhysicsServer3D));
+#endif
 }
 
 RID JoltPhysicsServer3D::_world_boundary_shape_create() {
