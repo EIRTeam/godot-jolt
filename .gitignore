@@ -5,6 +5,7 @@
 *.o
 __pycache__/
 .ccls-cache/
+**/*.gen.*
 
 # Godot
 /**/.godot
