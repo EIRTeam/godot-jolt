@@ -4,6 +4,7 @@
 /examples/addons
 *.o
 __pycache__/
+.ccls-cache/
 
 # Godot
 /**/.godot
