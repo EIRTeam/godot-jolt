@@ -144,7 +144,7 @@ JoltPhysicsServer3D::JoltPhysicsServer3D() {
 #ifdef GDEXTENSION
 	engine->register_singleton(server_name, this);
 #else
-	engine->remove_singleton(server_name, this);
+	engine->add_singleton(Engine::Singleton(server_name, this));
 #endif
 }
 
