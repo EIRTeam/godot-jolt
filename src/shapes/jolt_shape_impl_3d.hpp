@@ -78,7 +78,7 @@ protected:
 
 	String _owners_to_string() const;
 
-	HashMap<JoltShapedObjectImpl3D*, int32_t> ref_counts_by_owner;
+	HashMapJolt<JoltShapedObjectImpl3D*, int32_t> ref_counts_by_owner;
 
 	RID rid;
 

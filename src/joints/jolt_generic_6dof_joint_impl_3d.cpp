@@ -1,5 +1,6 @@
 #include "jolt_generic_6dof_joint_impl_3d.hpp"
 
+#include "core/math/math_defs.h"
 #include "objects/jolt_body_impl_3d.hpp"
 #include "spaces/jolt_space_3d.hpp"
 
@@ -626,7 +627,11 @@ void JoltGeneric6DOFJointImpl3D::_update_spring_equilibrium(int32_t p_axis) {
 			{(float)-spring_equilibrium[AXIS_ANGULAR_X],
 			 (float)-spring_equilibrium[AXIS_ANGULAR_Y],
 			 (float)-spring_equilibrium[AXIS_ANGULAR_Z]},
+#ifdef GDEXTENSION
 			EULER_ORDER_ZYX
+#else
+			EulerOrder::ZYX
+#endif
 		);
 
 		constraint->SetTargetOrientationCS(to_jolt(target_orientation));

@@ -54,7 +54,7 @@ private:
 		return (p_x * (p_x + 1)) / 2 + p_y;
 	}
 
-	LocalVector<uint8_t> bits;
+	LocalVectorJolt<uint8_t> bits;
 
 	int32_t size = 0;
 };

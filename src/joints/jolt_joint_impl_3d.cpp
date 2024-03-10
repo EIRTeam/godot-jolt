@@ -1,5 +1,6 @@
 #include "jolt_joint_impl_3d.hpp"
 
+#include "core/math/math_defs.h"
 #include "objects/jolt_body_impl_3d.hpp"
 #include "servers/jolt_project_settings.hpp"
 #include "spaces/jolt_space_3d.hpp"
@@ -179,7 +180,11 @@ void JoltJointImpl3D::_shift_reference_frames(
 	const Basis& basis_a = local_ref_a.basis;
 	const Basis& basis_b = local_ref_b.basis;
 
+	#ifdef GDEXTENSION
 	const Basis shifted_basis_a = basis_a * Basis::from_euler(p_angular_shift, EULER_ORDER_ZYX);
+	#else
+	const Basis shifted_basis_a = basis_a * Basis::from_euler(p_angular_shift, EulerOrder::ZYX);
+	#endif
 	const Vector3 shifted_origin_a = origin_a - basis_a.xform(p_linear_shift);
 
 	p_shifted_ref_a = Transform3D(shifted_basis_a, shifted_origin_a);

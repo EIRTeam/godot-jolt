@@ -52,7 +52,7 @@
 #include "scene/3d/visual_instance_3d.h"
 #include "core/object/object.h"
 #include "core/os/os.h"
-#include "scene/3d/physics_body_3d.h"
+#include "scene/3d/physics/physics_body_3d.h"
 #include "servers/physics_server_3d.h"
 #include "core/config/project_settings.h"
 #include "core/object/worker_thread_pool.h"
@@ -124,7 +124,7 @@
 #include "servers/rendering_server.h"
 #include "scene/resources/material.h"
 #include "scene/main/viewport.h"
-#include "scene/resources/world_3d.h"
+#include "scene/resources/3d/world_3d.h"
 
 #endif
 
@@ -209,8 +209,8 @@ using namespace godot;
 #pragma warning(pop)
 #endif // _MSC_VER
 
+
 #include "containers/local_vector.hpp"
-#include "containers/rid_owner.hpp"
 #include "containers/symmetric_bit_table.hpp"
 #include "misc/bind_macros.hpp"
 #include "misc/error_macros.hpp"
@@ -219,13 +219,15 @@ using namespace godot;
 #include "misc/gdex_rename.hpp"
 #include "containers/hash_map.hpp"
 #include "containers/hash_set.hpp"
+#include "containers/free_list.hpp"
+#include "containers/inline_vector.hpp"
 #include "misc/math.hpp"
 
 #ifdef GDEXTENSION
+#include "containers/rid_owner.hpp"
 #else
 #include "core/templates/rid.h"
 #include "core/string/print_string.h"
-#include "containers/rid_owner.hpp"
 #endif
 
 #include "misc/scope_guard.hpp"

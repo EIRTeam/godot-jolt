@@ -140,7 +140,7 @@ protected:
 
 	virtual void _space_changed() { }
 
-	LocalVector<JoltShapeInstance3D> shapes;
+	LocalVectorJolt<JoltShapeInstance3D> shapes;
 
 	RID rid;
 

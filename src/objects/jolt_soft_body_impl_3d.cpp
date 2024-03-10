@@ -485,7 +485,7 @@ bool JoltSoftBodyImpl3D::_ref_shared_data() {
 
 		iter_shared_data = mesh_to_shared.emplace(mesh);
 
-		LocalVector<int32_t>& mesh_to_physics = iter_shared_data->second.mesh_to_physics;
+		LocalVectorJolt<int32_t>& mesh_to_physics = iter_shared_data->second.mesh_to_physics;
 
 		JPH::SoftBodySharedSettings& settings = *iter_shared_data->second.settings;
 		settings.mVertexRadius = JoltProjectSettings::get_soft_body_point_margin();
@@ -494,7 +494,7 @@ bool JoltSoftBodyImpl3D::_ref_shared_data() {
 		JPH::Array<SoftBodyFace>& physics_faces = settings.mFaces;
 		JPH::Array<SoftBodyEdge>& physics_edges = settings.mEdgeConstraints;
 
-		HashMap<Vector3, int32_t> vertex_to_physics;
+		HashMapJolt<Vector3, int32_t> vertex_to_physics;
 
 		const auto mesh_vertex_count = (int32_t)mesh_vertices.size();
 		const auto mesh_index_count = (int32_t)mesh_indices.size();

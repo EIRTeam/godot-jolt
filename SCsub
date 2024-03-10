@@ -116,28 +116,27 @@ else:
     if not env["use_llvm"]:
         env_godot_jolt.Prepend(CXXFLAGS=["-no-integrated-cpp"])
 
-
-# Setup jolt build
-env_thirdparty = env_godot_jolt.Clone()
-env_thirdparty.disable_warnings()
-
 if use_avx512:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX512"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_AVX512"])
 if use_avx2:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX2"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_AVX2"])
 if use_bmi1:
-    env_thirdparty.Prepend(CPPDEFINES=[
+    env_godot_jolt.Prepend(CPPDEFINES=[
         "JPH_USE_TZCNT",
         "JPH_USE_LZCNT"
     ])
 if use_fma3:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_FMADD"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_FMADD"])
 if use_f16c:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_F16C"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_F16C"])
 if use_avx:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_AVX"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_AVX"])
 if use_sse4_2:
-    env_thirdparty.Prepend(CPPDEFINES=["JPH_USE_SSE4_2", "JPH_USE_SSE4_1"])
+    env_godot_jolt.Prepend(CPPDEFINES=["JPH_USE_SSE4_2", "JPH_USE_SSE4_1"])
+
+# Setup jolt build
+env_thirdparty = env_godot_jolt.Clone()
+env_thirdparty.disable_warnings()
 
 thirdparty_obj = []
 thirdparty_sources = [thirdparty_dir + file for file in jolt_build_files.get_files()]
@@ -168,8 +167,6 @@ mimalloc_sources = [
     "thirdparty/mimalloc/src/prim/prim.c"
 ]
 
-print(mimalloc_sources)
-
 mimalloc_obj = []
 
 env_thirdparty.add_source_files(mimalloc_obj, mimalloc_sources)
@@ -179,6 +176,7 @@ env.modules_sources += mimalloc_obj
 source_dir = "src/"
 
 env_godot_jolt.Prepend(CPPPATH=[source_dir])
+env_godot_jolt.disable_warnings()
 
 sources = [
     "src/register_types.cpp"

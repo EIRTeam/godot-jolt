@@ -461,7 +461,7 @@ bool JoltContactListener3D::_try_add_debug_contacts(
 		const JPH::Vec3 local_contact_point = p_manifold.GetLocalContactPoint(vertex);
 		const JPH::RVec3 contact_point = body_com_transform * local_contact_point;
 
-		debug_contacts[contact_index++] = to_godot(contact_point);
+		debug_contacts.ptrw()[contact_index++] = to_godot(contact_point);
 	}
 
 	return true;

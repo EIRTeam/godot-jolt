@@ -63,8 +63,10 @@ void initialize_jolt_module(ModuleInitializationLevel p_level) {
 			EditorPlugins::add_by_type<JoltEditorPlugin>();
 #endif // GDJ_CONFIG_EDITOR
 		} break;
+#ifdef GDEXTENSION
 		case MODULE_INITIALIZATION_LEVEL_MAX: {
 		} break;
+#endif
 	}
 }
 
@@ -81,8 +83,10 @@ void uninitialize_jolt_module(ModuleInitializationLevel p_level) {
 		} break;
 		case MODULE_INITIALIZATION_LEVEL_EDITOR: {
 		} break;
+#ifdef GDEXTENSION
 		case MODULE_INITIALIZATION_LEVEL_MAX: {
 		} break;
+#endif
 	}
 }
 

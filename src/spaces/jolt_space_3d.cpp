@@ -161,7 +161,9 @@ void JoltSpace3D::call_queries() {
 		if (JPH::Body* jolt_body = body_accessor.try_get(i)) {
 			if (!jolt_body->IsSensor() && !jolt_body->IsSoftBody()) {
 				auto* body = reinterpret_cast<JoltBodyImpl3D*>(jolt_body->GetUserData());
-
+				if (!body) {
+					continue;
+				}
 				body->call_queries(*jolt_body);
 			}
 		}
@@ -475,6 +477,10 @@ void JoltSpace3D::_pre_step(float p_step) {
 
 			auto* object = reinterpret_cast<JoltShapedObjectImpl3D*>(jolt_body->GetUserData());
 
+			if (!object) {
+				continue;
+			}
+
 			object->pre_step(p_step, *jolt_body);
 
 			if (object->reports_contacts()) {
@@ -500,7 +506,9 @@ void JoltSpace3D::_post_step(float p_step) {
 			}
 
 			auto* object = reinterpret_cast<JoltObjectImpl3D*>(jolt_body->GetUserData());
-
+			if (!object) {
+				continue;
+			}
 			object->post_step(p_step, *jolt_body);
 		}
 	}

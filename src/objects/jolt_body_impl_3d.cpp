@@ -50,7 +50,7 @@ JoltBodyImpl3D::~JoltBodyImpl3D() {
 
 void JoltBodyImpl3D::set_transform(const Transform3D& p_transform) {
 	Vector3 new_scale;
-	const Transform3D new_transform = Math::decomposed(p_transform, new_scale);
+	const Transform3D new_transform = MathEx::decomposed(p_transform, new_scale);
 
 	if (!scale.is_equal_approx(new_scale)) {
 		scale = new_scale;

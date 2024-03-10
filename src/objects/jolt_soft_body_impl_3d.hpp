@@ -6,7 +6,7 @@ class JoltSpace3D;
 
 class JoltSoftBodyImpl3D final : public JoltObjectImpl3D {
 	struct Shared {
-		LocalVector<int32_t> mesh_to_physics;
+		LocalVectorJolt<int32_t> mesh_to_physics;
 
 		JPH::Ref<JPH::SoftBodySharedSettings> settings = new JPH::SoftBodySharedSettings();
 
@@ -127,13 +127,13 @@ private:
 
 	void _exceptions_changed();
 
-	inline static HashMap<RID, Shared> mesh_to_shared;
+	inline static HashMapJolt<RID, Shared> mesh_to_shared;
 
 	HashSet<int32_t> pinned_vertices;
 
-	LocalVector<RID> exceptions;
+	LocalVectorJolt<RID> exceptions;
 
-	LocalVector<Vector3> normals;
+	LocalVectorJolt<Vector3> normals;
 
 	const Shared* shared = nullptr;
 

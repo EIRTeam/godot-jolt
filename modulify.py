@@ -81,16 +81,15 @@ def modulify(env, file_path, blacklist = [], function_params = {}, sources = [])
         output_path_cpp.replace(".gen.cpp", ".cpp"),
         [output_path_cpp, "modulify.py"]
     )
-    print("DAB", output_path_cpp.replace(".gen.cpp", ".cpp"))
     env.CommandNoCache(
         output_path,
         ["modulify.py", env.Value(blacklist), env.Value(function_params)],
-        env.Run(make_module, f"Building file {output_path}.", subprocess=False),
+        env.Run(make_module, subprocess=False),
     )
     env.CommandNoCache(
         output_path_cpp,
         ["modulify.py", env.Value(blacklist), env.Value(function_params)],
-        env.Run(make_module, f"Building file {output_path_cpp}.", subprocess=False),
+        env.Run(make_module, subprocess=False),
     )
 
     path_cpp = output_path_cpp.replace(".gen.cpp", ".cpp")

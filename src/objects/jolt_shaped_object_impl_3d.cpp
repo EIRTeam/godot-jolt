@@ -201,7 +201,7 @@ void JoltShapedObjectImpl3D::add_shape(
 	bool p_disabled
 ) {
 	Vector3 shape_scale;
-	Math::decompose(p_transform, shape_scale);
+	MathEx::decompose(p_transform, shape_scale);
 
 	shapes.emplace_back(this, p_shape, p_transform, shape_scale, p_disabled);
 
@@ -288,7 +288,7 @@ void JoltShapedObjectImpl3D::set_shape_transform(int32_t p_index, Transform3D p_
 	ERR_FAIL_INDEX(p_index, shapes.size());
 
 	Vector3 new_scale;
-	Math::decompose(p_transform, new_scale);
+	MathEx::decompose(p_transform, new_scale);
 
 	JoltShapeInstance3D& shape = shapes[p_index];
 
