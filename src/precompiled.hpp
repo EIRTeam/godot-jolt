@@ -67,7 +67,7 @@
 #include "core/variant/variant_utility.h"
 #include "scene/3d/node_3d.h"
 #include "editor/gui/editor_file_dialog.h"
-
+#include "servers/extensions/physics_server_3d_extension.h"
 
 #endif
 
@@ -103,7 +103,6 @@
 #include "core/os/time.h"
 #include "scene/main/timer.h"
 #include "core/os/spin_lock.h"
-#include "servers/extensions/physics_server_3d_extension.h"
 
 #endif // GDEXTENSION || TOOLS_ENABLED
 

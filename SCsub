@@ -11,7 +11,11 @@ env_godot_jolt = env_modules.Clone()
 thirdparty_dir = "thirdparty/jolt/Jolt/"
 env_godot_jolt.Prepend(CPPPATH=["thirdparty/jolt/"])
 
-jolt_config = ARGUMENTS.get("jolt_config", "EditorDebug")
+default_jolt = "Distribution" if not env.dev_build else "Development"
+
+if env["target"] == "editor":
+    default_jolt = "EditorDevelopment"
+jolt_config = ARGUMENTS.get("jolt_config", default_jolt)
 is_editor_config = jolt_config in ["EditorDebug", "EditorDevelopment", "EditorDistribution"]
 is_debug_config = jolt_config in ["Debug", "EditorDebug"]
 is_development_config = jolt_config in ["Development", "EditorDevelopment"]
