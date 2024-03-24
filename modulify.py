@@ -84,12 +84,12 @@ def modulify(env, file_path, blacklist = [], function_params = {}, sources = [])
     env.CommandNoCache(
         output_path,
         ["modulify.py", env.Value(blacklist), env.Value(function_params)],
-        env.Run(make_module, subprocess=False),
+        env.Run(make_module),
     )
     env.CommandNoCache(
         output_path_cpp,
         ["modulify.py", env.Value(blacklist), env.Value(function_params)],
-        env.Run(make_module, subprocess=False),
+        env.Run(make_module),
     )
 
     path_cpp = output_path_cpp.replace(".gen.cpp", ".cpp")

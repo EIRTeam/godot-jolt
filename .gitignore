@@ -2,7 +2,7 @@
 /**/compile_commands.json
 /build
 /examples/addons
-*.o
+/**/*.o
 __pycache__/
 .ccls-cache/
 **/*.gen.*
